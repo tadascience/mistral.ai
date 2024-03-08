@@ -1,6 +1,6 @@
 #' @export
 stream <- function(text, model = "mistral-tiny", ..., error_call = current_env()) {
-  check_model(error_call = error_call)
+  check_model(model, error_call = error_call)
 
   req <- req_chat(text, model, stream = TRUE, error_call = error_call)
   resp <- req_perform_stream(req,
