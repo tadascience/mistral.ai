@@ -34,8 +34,6 @@ pak::pak("tadascience/mistral.ai")
 # available models
 mistral.ai::models()
 
-# chat with mistral
-mistral.ai::chat("is mistral the best wind ?")
-
-# mistral.ai::stream("")
+mistral.ai::chat("what is mistral ?")
+mistral.ai::stream("fun facts mistral.ai")
 ```

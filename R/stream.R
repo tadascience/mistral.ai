@@ -16,16 +16,18 @@ stream <- function(text, model = "mistral-tiny") {
   invisible(resp)
 }
 
+#' @importFrom purrr map_chr
+#' @importFrom jsonlite fromJSON
 stream_callback <- function(x) {
   txt <- rawToChar(x)
 
-  lines <- stringr::str_split(txt, "\n")[[1]]
+  lines <- str_split(txt, "\n")[[1]]
   lines <- lines[lines != ""]
   lines <- str_replace_all(lines, "^data: ", "")
   lines <- lines[lines != "[DONE]"]
 
   tokens <- map_chr(lines, \(line) {
-    chunk <- jsonlite::fromJSON(line)
+    chunk <- fromJSON(line)
     chunk$choices$delta$content
   })
 
