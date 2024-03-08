@@ -52,7 +52,7 @@ print.chat_tibble <- function(x, ...) {
 #' @export
 chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny") {
 
-  available_models <- models(.call = current_env())
+  available_models <- models()
   if (!(model %in% available_models)) {
     cli::cli_abort(c(
       glue::glue("The model {model} is not available."),

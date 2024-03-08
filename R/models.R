@@ -6,14 +6,9 @@
 #' models()
 #'
 #' @export
-models <- function(.call = caller_env()) {
+models <- function() {
 
-  req <- request(mistral_base_url) |>
-    req_url_path_append("v1", "models") |>
-    authenticate(.call = .call) |>
-    req_cache(tempdir(),
-              use_on_error = TRUE,
-              max_age = 2 * 60 * 60) # 2 hours
+  req <- req_models()
 
   resp <- req_perform(req) |>
     resp_body_json(simplifyVector = T)
@@ -22,4 +17,17 @@ models <- function(.call = caller_env()) {
     purrr::pluck("data","id")
 
   return(models)
+}
+
+
+req_models <- function(.call = caller_env()) {
+
+  req <- request(mistral_base_url) |>
+    req_url_path_append("v1", "models") |>
+    authenticate(.call = .call) |>
+    req_cache(tempdir(),
+              use_on_error = TRUE,
+              max_age = 2 * 60 * 60) # 2 hours
+
+  req
 }
