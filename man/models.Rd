@@ -4,7 +4,7 @@
 \alias{models}
 \title{Retrieve all models available in the Mistral API}
 \usage{
-models()
+models(.call = caller_env())
 }
 \value{
 A character vector with the models available in the Mistral API

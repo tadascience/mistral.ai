@@ -1,3 +1,4 @@
+#' @export
 stream <- function(text, model = "mistral-tiny") {
   if (!(model %in% models())) {
     cli::cli_abort("The model ", model, " is not available.",
