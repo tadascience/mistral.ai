@@ -21,6 +21,8 @@ stream_callback <- function(x) {
   lines <- stringr::str_split(txt, "\n")[[1]]
   lines <- lines[lines != ""]
   lines <- str_replace_all(lines, "^data: ", "")
+  lines <- lines[lines != "[DONE]"]
+
   tokens <- map_chr(lines, \(line) {
     chunk <- jsonlite::fromJSON(line)
     chunk$choices$delta$content
