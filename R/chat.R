@@ -17,6 +17,17 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
   req
 }
 
+#' Chat with the Mistral api
+#'
+#' @param text some text
+#' @param which model to use. See [models()] for more information about which models are available
+#'
+#' @return Result text from Mistral
+#'
+#' @examples
+#' chat("Top 5 R packages")
+#'
+#' @export
 chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny") {
 
   if (!(model %in% models())) {
@@ -28,5 +39,7 @@ chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny
   resp <- req_perform(req) |>
     resp_body_json()
 
-  purrr::pluck(resp, "choices", 1, "message", "content")
+  result <- purrr::pluck(resp, "choices", 1, "message", "content")
+  writeLines(result)
+  invisible(result)
 }

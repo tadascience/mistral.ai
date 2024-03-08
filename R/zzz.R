@@ -4,3 +4,4 @@
 NULL
 
 mistral_base_url <- "https://api.mistral.ai"
+
