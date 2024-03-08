@@ -1,6 +1,6 @@
-req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", .call = caller_env()) {
+req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, .call = caller_env()) {
 
-  req <- request(mistral_base_url) |>
+  request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
     authenticate(.call = .call) |>
     req_body_json(
@@ -9,12 +9,12 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
         messages = list(
           list(
             role = "user",
-            content = text
+            content = text,
+            stream = is_true(stream)
           )
         )
       )
     )
-  req
 }
 
 resp_chat <- function(response) {
