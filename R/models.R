@@ -19,7 +19,7 @@ models <- function() {
     resp_body_json(simplifyVector = T)
 
   models <- resp |>
-    pluck("data","id")
+    purrr::pluck("data","id")
 
   return(models)
 }
