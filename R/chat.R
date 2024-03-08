@@ -1,4 +1,4 @@
-req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", .call = rlang::caller_env()) {
+req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, .call = rlang::caller_env()) {
 
   req <- request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
@@ -11,7 +11,8 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
             role = "user",
             content = text
           )
-        )
+        ),
+        stream = stream
       )
     )
   req
