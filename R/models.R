@@ -18,7 +18,9 @@ check_model <- function(model, error_call = caller_env()) {
 #' @return A character vector with the models available in the Mistral API
 #'
 #' @examples
-#' models()
+#' \dontrun{
+#'   models()
+#' }
 #'
 #' @export
 models <- function(error_call = caller_env()) {

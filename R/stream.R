@@ -1,3 +1,6 @@
+#' stream
+#'
+#' @inheritParams chat
 #' @export
 stream <- function(text, model = "mistral-tiny", ..., error_call = current_env()) {
   check_model(model, error_call = error_call)

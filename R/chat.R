@@ -42,14 +42,16 @@ print.chat_tibble <- function(x, ...) {
 #' Chat with the Mistral api
 #'
 #' @param text some text
-#' @param which model to use. See [models()] for more information about which models are available
+#' @param model which model to use. See [models()] for more information about which models are available
 #' @param ... ignored
 #' @inheritParams httr2::req_perform
 #'
 #' @return Result text from Mistral
 #'
 #' @examples
+#' \dontrun{
 #' chat("Top 5 R packages")
+#' }
 #'
 #' @export
 chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", ..., error_call = current_env()) {

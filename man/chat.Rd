@@ -14,14 +14,14 @@ chat(
 \arguments{
 \item{text}{some text}
 
+\item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
+
 \item{...}{ignored}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
-
-\item{which}{model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 }
 \value{
 Result text from Mistral
@@ -30,6 +30,8 @@ Result text from Mistral
 Chat with the Mistral api
 }
 \examples{
+\dontrun{
 chat("Top 5 R packages")
+}
 
 }
