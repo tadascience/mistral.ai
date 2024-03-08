@@ -17,6 +17,28 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
   req
 }
 
+resp_chat <- function(response) {
+  data <- resp_body_json(response)
+
+  tib <- map_dfr(data$choices, \(choice) {
+    as_tibble(choice$message)
+  })
+
+  class(tib) <- c("chat_tibble", class(tib))
+  tib
+}
+
+#' @export
+print.chat_tibble <- function(x, ...) {
+  n <- nrow(x)
+
+  for (i in seq_len(n)) {
+    writeLines(cli::col_silver(cli::rule(x$role[i])))
+    writeLines(x$content[i])
+  }
+  invisible(x)
+}
+
 #' Chat with the Mistral api
 #'
 #' @param text some text
@@ -39,10 +61,6 @@ chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny
   }
 
   req <- req_chat(text, model)
-  resp <- req_perform(req) |>
-    resp_body_json()
-
-  result <- purrr::pluck(resp, "choices", 1, "message", "content")
-  writeLines(result)
-  invisible(result)
+  resp <- req_perform(req)
+  resp_chat(resp)
 }
