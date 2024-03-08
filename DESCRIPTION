@@ -16,4 +16,5 @@ Imports:
     cli,
     httr2,
     purrr,
-    tibble
+    tibble,
+    glue,

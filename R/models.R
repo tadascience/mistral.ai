@@ -6,11 +6,11 @@
 #' models()
 #'
 #' @export
-models <- function() {
+models <- function(.call = caller_env()) {
 
   req <- request(mistral_base_url) |>
     req_url_path_append("v1", "models") |>
-    authenticate()
+    authenticate(.call = .call)
 
   # How to: Do this request the first time it is used (directly or indirectly)
   # and cache the response for some time.
