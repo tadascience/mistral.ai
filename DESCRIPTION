@@ -1,8 +1,10 @@
 Package: mistral.ai
 Title: Interact with the 'Mistral.AI' api
 Version: 0.0.0.9000
-Authors@R: 
-    person("Romain", "François", email = "romain@tada.science", role = c("aut", "cre"))
+Authors@R: c(
+    person("Romain", "François", email = "romain@tada.science", role = c("aut", "cre")),
+    person("Felix", "Mil", email = "felix.mil.dev@gmail.com", role = "aut")
+  )
 Description: Interact with the 'Mistral.AI' api.
 License: MIT + file LICENSE
 Encoding: UTF-8
