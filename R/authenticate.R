@@ -1,4 +1,4 @@
-authenticate <- function(request, .call){
+authenticate <- function(request, .call = rlang::caller_env()){
   key <- Sys.getenv("MISTRAL_API_KEY")
   if (identical(key, "")) {
     cli::cli_abort(c(
