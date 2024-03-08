@@ -18,8 +18,6 @@ models <- function(.call = caller_env()) {
   resp <- req_perform(req) |>
     resp_body_json(simplifyVector = T)
 
-  models <- resp |>
+  resp |>
     purrr::pluck("data","id")
-
-  return(models)
 }
