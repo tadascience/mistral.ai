@@ -7,9 +7,8 @@
 #'
 #' @export
 models <- function() {
-  base_url <- "https://api.mistral.ai"
 
-  req <- request(base_url) |>
+  req <- request(mistral_base_url) |>
     req_url_path_append("v1", "models") |>
     authenticate()
 
