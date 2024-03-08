@@ -1,4 +1,4 @@
-req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", .call = rlang::caller_env()) {
+req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", .call = caller_env()) {
 
   req <- request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
@@ -30,7 +30,8 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
 #' @export
 chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny") {
 
-  if (!(model %in% models())) {
+  available_models <- models(.call = current_env())
+  if (!(model %in% available_models)) {
     cli::cli_abort(c(
       glue::glue("The model {model} is not available."),
       "i" = "Please use the {.code models()} function to see the available models."
