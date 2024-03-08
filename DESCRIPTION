@@ -14,4 +14,6 @@ URL: https://github.com/tadascience/mistral.ai
 BugReports: https://github.com/tadascience/mistral.ai/issues
 Imports: 
     cli,
-    httr2
+    httr2,
+    purrr,
+    tibble
