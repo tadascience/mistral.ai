@@ -9,10 +9,10 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
         messages = list(
           list(
             role = "user",
-            content = text,
-            stream = is_true(stream)
+            content = text
           )
-        )
+        ),
+        stream = is_true(stream)
       )
     )
 }
