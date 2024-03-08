@@ -4,7 +4,13 @@
 \alias{models}
 \title{Retrieve all models available in the Mistral API}
 \usage{
-models(.call = caller_env())
+models(error_call = caller_env())
+}
+\arguments{
+\item{error_call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
 A character vector with the models available in the Mistral API

@@ -1,8 +1,8 @@
-req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, .call = caller_env()) {
-
+req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, error_call = caller_env()) {
+  check_model(model, error_call = error_call)
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate(.call = .call) |>
+    authenticate(error_call = error_call) |>
     req_body_json(
       list(
         model = model,
@@ -17,7 +17,7 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
     )
 }
 
-resp_chat <- function(response) {
+resp_chat <- function(response, error_call = current_env()) {
   data <- resp_body_json(response)
 
   tib <- map_dfr(data$choices, \(choice) {
@@ -43,6 +43,8 @@ print.chat_tibble <- function(x, ...) {
 #'
 #' @param text some text
 #' @param which model to use. See [models()] for more information about which models are available
+#' @param ... ignored
+#' @inheritParams httr2::req_perform
 #'
 #' @return Result text from Mistral
 #'
@@ -50,17 +52,8 @@ print.chat_tibble <- function(x, ...) {
 #' chat("Top 5 R packages")
 #'
 #' @export
-chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny") {
-
-  available_models <- models(.call = current_env())
-  if (!(model %in% available_models)) {
-    cli::cli_abort(c(
-      glue::glue("The model {model} is not available."),
-      "i" = "Please use the {.code models()} function to see the available models."
-    ))
-  }
-
-  req <- req_chat(text, model)
-  resp <- req_perform(req)
-  resp_chat(resp)
+chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", ..., error_call = current_env()) {
+  req <- req_chat(text, model, error_call = error_call)
+  resp <- req_perform(req, error_call = error_call)
+  resp_chat(resp, error_call = error_call)
 }
