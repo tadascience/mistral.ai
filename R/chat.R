@@ -31,8 +31,10 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
 chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny") {
 
   if (!(model %in% models())) {
-    cli::cli_abort("The model ", model, " is not available.",
-                   "i" = "Please use the {.code models()} function to see the available models.")
+    cli::cli_abort(c(
+      glue::glue("The model {model} is not available."),
+      "i" = "Please use the {.code models()} function to see the available models."
+    ))
   }
 
   req <- req_chat(text, model)
