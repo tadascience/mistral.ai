@@ -18,3 +18,4 @@ Imports:
     purrr,
     tibble,
     glue,
+    stringr

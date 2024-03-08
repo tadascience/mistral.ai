@@ -3,6 +3,7 @@
 S3method(print,chat_tibble)
 export(chat)
 export(models)
+export(stream)
 import(cli)
 import(httr2)
 import(rlang)
