@@ -15,8 +15,18 @@ stream <- function(text, model = "mistral-tiny") {
   invisible(resp)
 }
 
-
 stream_callback <- function(x) {
-  cat(rawToChar(x))
+  txt <- rawToChar(x)
+
+  lines <- stringr::str_split(txt, "\n")[[1]]
+  lines <- lines[lines != ""]
+  lines <- str_replace_all(lines, "^data: ", "")
+  tokens <- map_chr(lines, \(line) {
+    chunk <- jsonlite::fromJSON(line)
+    chunk$choices$delta$content
+  })
+
+  cat(tokens)
+
   TRUE
 }
