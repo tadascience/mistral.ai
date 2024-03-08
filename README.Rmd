@@ -30,9 +30,12 @@ pak::pak("tadascience/mistral.ai")
 
 ## Example
 
-``` r
+```{r}
+# available models
 mistral.ai::models()
 
-mistral.ai::chat("what is the best R package ?")
-mistral.ai::stream("what is the best R package ?")
+# chat with mistral
+mistral.ai::chat("is mistral the best wind ?")
+
+# mistral.ai::stream("")
 ```
