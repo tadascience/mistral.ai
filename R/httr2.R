@@ -13,7 +13,7 @@ req_mistral_perform <- function(req, error_call = caller_env()) {
       )
     }
 
-    cli::cli_abort(
+    cli_abort(
       bullets, class = c("error_mistral_req_perform"),
       call = error_call, parent = err
     )
