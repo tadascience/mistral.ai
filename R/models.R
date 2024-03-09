@@ -26,14 +26,7 @@ models <- function(error_call = caller_env(), dry_run = FALSE) {
 }
 
 check_model <- function(model, error_call = caller_env()) {
-  available_models <- models(error_call = error_call)
-
-  if (!(model %in% available_models)) {
-    cli_abort(call = error_call, c(
-      "The model {model} is not available.",
-      "i" = "Please use the {.code models()} function to see the available models."
-    ))
-  }
-
+  candidates <- models(error_call = error_call)
+  arg_match(model, values = candidates, error_call = error_call)
   invisible(model)
 }
