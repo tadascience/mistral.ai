@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: c(
     person("Romain", "François", email = "romain@tada.science", role = c("aut", "cre")),
     person("Felix", "Mil", email = "felix.mil.dev@gmail.com", role = "aut"),
-    person("James", "Wade", email = "github@jameshwade.com", role="aut")
+    person("James", "Wade", email = "github@jameshwade.com", role = "aut")
   )
 Description: Interact with the 'Mistral.AI' api.
 License: MIT + file LICENSE
@@ -21,3 +21,4 @@ Imports:
     stringr,
     jsonlite,
     rlang
+Remotes: r-lib/httr2

@@ -1,16 +1,3 @@
-check_model <- function(model, error_call = caller_env()) {
-  available_models <- models(error_call = error_call)
-
-  if (!(model %in% available_models)) {
-    cli_abort(call = error_call, c(
-      "The model {model} is not available.",
-      "i" = "Please use the {.code models()} function to see the available models."
-    ))
-  }
-
-  invisible(model)
-}
-
 #' Retrieve all models available in the Mistral API
 #'
 #' @inheritParams chat
@@ -22,7 +9,6 @@ check_model <- function(model, error_call = caller_env()) {
 #'
 #' @export
 models <- function(error_call = caller_env(), dry_run = FALSE) {
-
   req <- request(mistral_base_url) |>
     req_url_path_append("v1", "models") |>
     authenticate(error_call = call) |>
@@ -34,8 +20,20 @@ models <- function(error_call = caller_env(), dry_run = FALSE) {
     return(req)
   }
 
-  resp <- req_perform(req, error_call = error_call) |>
-    resp_body_json(simplifyVector = TRUE)
+  req_mistral_perform(req, error_call = error_call) |>
+    resp_body_json(simplifyVector = TRUE) |>
+    pluck("data","id")
+}
 
-  pluck(resp, "data","id")
+check_model <- function(model, error_call = caller_env()) {
+  available_models <- models(error_call = error_call)
+
+  if (!(model %in% available_models)) {
+    cli_abort(call = error_call, c(
+      "The model {model} is not available.",
+      "i" = "Please use the {.code models()} function to see the available models."
+    ))
+  }
+
+  invisible(model)
 }
