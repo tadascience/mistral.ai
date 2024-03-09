@@ -1,6 +1,6 @@
-authenticate <- function(request, error_call = caller_env()){
+authenticate <- function(request, dry_run = FALSE, error_call = caller_env()){
   key <- Sys.getenv("MISTRAL_API_KEY")
-  if (identical(key, "")) {
+  if (!is_true(dry_run) && identical(key, "")) {
     cli_abort(call = error_call, c(
       "Please set the {.code MISTRAL_API_KEY} environment variable",
       i = "Get an API key from {.url https://console.mistral.ai/api-keys/}",
@@ -9,4 +9,3 @@ authenticate <- function(request, error_call = caller_env()){
   }
   req_auth_bearer_token(request, key)
 }
-

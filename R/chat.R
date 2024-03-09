@@ -2,28 +2,33 @@
 #'
 #' @param text some text
 #' @param model which model to use. See [models()] for more information about which models are available
+#' @param dry_run if TRUE the request is not performed
 #' @param ... ignored
 #' @inheritParams httr2::req_perform
 #'
-#' @return Result text from Mistral
+#' @return A tibble with columns `role` and `content` with class `chat_tibble` or a request
+#'         if this is a `dry_run`
 #'
 #' @examples
-#' \dontrun{
-#' chat("Top 5 R packages")
-#' }
+#' chat("Top 5 R packages", dry_run = TRUE)
 #'
 #' @export
-chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", ..., error_call = current_env()) {
-  req_chat(text, model, error_call = error_call) |>
-    req_mistral_perform(error_call = error_call) |>
-    resp_chat(error_call = error_call)
+chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
+  req <- req_chat(text, model, error_call = error_call, dry_run = dry_run)
+  if (is_true(dry_run)) {
+    return(req)
+  }
+  resp <- req_mistral_perform(req, error_call = error_call)
+  resp_chat(resp, error_call = error_call)
 }
 
-req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, error_call = caller_env()) {
-  check_model(model, error_call = error_call)
+req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, dry_run = FALSE, error_call = caller_env()) {
+  if (!is_true(dry_run)) {
+    check_model(model, error_call = error_call)
+  }
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate(error_call = error_call) |>
+    authenticate(error_call = error_call, dry_run = dry_run) |>
     req_body_json(
       list(
         model = model,
