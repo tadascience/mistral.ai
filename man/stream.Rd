@@ -4,12 +4,20 @@
 \alias{stream}
 \title{stream}
 \usage{
-stream(text, model = "mistral-tiny", ..., error_call = current_env())
+stream(
+  text,
+  model = "mistral-tiny",
+  dry_run = FALSE,
+  ...,
+  error_call = current_env()
+)
 }
 \arguments{
 \item{text}{some text}
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
+
+\item{dry_run}{if TRUE the request is not performed}
 
 \item{...}{ignored}
 
