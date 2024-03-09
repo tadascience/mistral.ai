@@ -1,5 +1,5 @@
 Package: mistral.ai
-Title: Interact with the 'Mistral.AI' api
+Title: Interact with the 'Mistral.AI' Api
 Version: 0.0.0.9000
 Authors@R: c(
     person("Romain", "François", email = "romain@tada.science", role = c("aut", "cre")),
