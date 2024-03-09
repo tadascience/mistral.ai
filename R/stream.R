@@ -15,7 +15,6 @@ stream <- function(text, model = "mistral-tiny", ..., error_call = current_env()
   invisible(resp)
 }
 
-#' @importFrom purrr map_chr
 #' @importFrom jsonlite fromJSON
 stream_callback <- function(x) {
   txt <- rawToChar(x)

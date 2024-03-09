@@ -32,9 +32,8 @@ models <- function(error_call = caller_env()) {
               use_on_error = TRUE,
               max_age = 2 * 60 * 60) # 2 hours
 
-  resp <- req_perform(req) |>
+  resp <- req_perform(req, error_call = error_call) |>
     resp_body_json(simplifyVector = TRUE)
 
-  resp |>
-    purrr::pluck("data","id")
+  pluck(resp, "data","id")
 }
