@@ -21,3 +21,4 @@ Imports:
     stringr,
     jsonlite,
     rlang
+Remotes: r-lib/httr2
