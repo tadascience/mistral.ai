@@ -7,6 +7,7 @@
 chat(
   text = "What are the top 5 R packages ?",
   model = "mistral-tiny",
+  dry_run = FALSE,
   ...,
   error_call = current_env()
 )
@@ -16,6 +17,8 @@ chat(
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 
+\item{dry_run}{if TRUE the request is not performed}
+
 \item{...}{ignored}
 
 \item{error_call}{The execution environment of a currently
@@ -24,14 +27,17 @@ mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
-Result text from Mistral
+A tibble with columns \code{role} and \code{content} with class \code{chat_tibble} or a request
+if this is a \code{dry_run}
 }
 \description{
 Chat with the Mistral api
 }
 \examples{
+chat("Top 5 R packages", dry_run = TRUE)
+
 \dontrun{
-chat("Top 5 R packages")
+   chat("Top 5 R packages")
 }
 
 }
