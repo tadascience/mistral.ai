@@ -4,7 +4,7 @@
 \alias{models}
 \title{Retrieve all models available in the Mistral API}
 \usage{
-models(error_call = caller_env())
+models(error_call = current_env())
 }
 \arguments{
 \item{error_call}{The execution environment of a currently

@@ -1,3 +1,24 @@
+#' Chat with the Mistral api
+#'
+#' @param text some text
+#' @param model which model to use. See [models()] for more information about which models are available
+#' @param ... ignored
+#' @inheritParams httr2::req_perform
+#'
+#' @return Result text from Mistral
+#'
+#' @examples
+#' \dontrun{
+#' chat("Top 5 R packages")
+#' }
+#'
+#' @export
+chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", ..., error_call = current_env()) {
+  req_chat(text, model, error_call = error_call) |>
+    req_mistral_perform(error_call = error_call) |>
+    resp_chat(error_call = error_call)
+}
+
 req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", stream = FALSE, error_call = caller_env()) {
   check_model(model, error_call = error_call)
   request(mistral_base_url) |>
@@ -37,25 +58,4 @@ print.chat_tibble <- function(x, ...) {
     writeLines(x$content[i])
   }
   invisible(x)
-}
-
-#' Chat with the Mistral api
-#'
-#' @param text some text
-#' @param model which model to use. See [models()] for more information about which models are available
-#' @param ... ignored
-#' @inheritParams httr2::req_perform
-#'
-#' @return Result text from Mistral
-#'
-#' @examples
-#' \dontrun{
-#' chat("Top 5 R packages")
-#' }
-#'
-#' @export
-chat <- function(text = "What are the top 5 R packages ?", model = "mistral-tiny", ..., error_call = current_env()) {
-  req <- req_chat(text, model, error_call = error_call)
-  resp <- req_perform(req, error_call = error_call)
-  resp_chat(resp, error_call = error_call)
 }
