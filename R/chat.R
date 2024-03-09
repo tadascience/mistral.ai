@@ -28,7 +28,7 @@ req_chat <- function(text = "What are the top 5 R packages ?", model = "mistral-
   }
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate(error_call = error_call) |>
+    authenticate(error_call = error_call, dry_run = dry_run) |>
     req_body_json(
       list(
         model = model,

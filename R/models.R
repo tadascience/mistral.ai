@@ -11,7 +11,7 @@
 models <- function(error_call = caller_env(), dry_run = FALSE) {
   req <- request(mistral_base_url) |>
     req_url_path_append("v1", "models") |>
-    authenticate(error_call = call) |>
+    authenticate(error_call = call, dry_run = dry_run) |>
     req_cache(tempdir(),
               use_on_error = TRUE,
               max_age = 2 * 60 * 60) # 2 hours
