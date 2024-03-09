@@ -21,8 +21,6 @@ A character vector with the models available in the Mistral API
 Retrieve all models available in the Mistral API
 }
 \examples{
-\dontrun{
-  models()
-}
+models(dry_run = TRUE)
 
 }
