@@ -19,7 +19,7 @@ stream(
 
 \item{dry_run}{if TRUE the request is not performed}
 
-\item{...}{ignored}
+\item{...}{messages}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
