@@ -11,17 +11,25 @@ stream <- function(text, model = "mistral-tiny", dry_run = FALSE, ..., error_cal
     return(req)
   }
 
+  env <- caller_env()
+
+  env$response <- character()
+
   resp <- req_perform_stream(req,
-    callback = stream_callback,
-    round = "line",
-    buffer_kb = 0.01
+                             callback = \(x) stream_callback(x, env),
+                             round = "line",
+                             buffer_kb = 0.01
   )
 
-  invisible(resp)
+  tib <- tibble(role = "assistant",
+                content = env$response)
+  class(tib) <- c("chat_tibble", class(tib))
+
+  invisible(tib)
 }
 
 #' @importFrom jsonlite fromJSON
-stream_callback <- function(x) {
+stream_callback <- function(x, env) {
   txt <- rawToChar(x)
 
   lines <- str_split(txt, "\n")[[1]]
@@ -33,6 +41,8 @@ stream_callback <- function(x) {
     chunk <- fromJSON(line)
     chunk$choices$delta$content
   })
+
+  env$response <- paste0(env$response, tokens)
 
   cat(tokens)
 
