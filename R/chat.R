@@ -47,7 +47,8 @@ resp_chat <- function(response, error_call = current_env()) {
   data <- resp_body_json(response)
 
   tib <- map_dfr(data$choices, \(choice) {
-    as_tibble(choice$message)
+    tibble(role = choice$message$role,
+           content = choice$message$content)
   })
 
   class(tib) <- c("chat_tibble", class(tib))
