@@ -3,10 +3,10 @@
 #' @inheritParams chat
 #'
 #' @export
-stream <- function(text, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
+stream <- function(..., model = "mistral-tiny", dry_run = FALSE, error_call = current_env()) {
   check_model(model, error_call = error_call)
 
-  req <- req_chat(text, model, stream = TRUE, error_call = error_call, dry_run = dry_run)
+  req <- req_chat(..., model, stream = TRUE, error_call = error_call, dry_run = dry_run)
   if (is_true(dry_run)) {
     return(req)
   }
