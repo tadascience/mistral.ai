@@ -45,8 +45,6 @@ Chat with the Mistral api
 stream
 }
 \examples{
-\dontrun{
-  chat("Top 5 R packages", dry_run = TRUE)
-}
+chat("Top 5 R packages", dry_run = TRUE)
 
 }

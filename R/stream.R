@@ -11,11 +11,10 @@ stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error
     return(req)
   }
 
-  resp <- req_perform_stream(req,
-    callback = stream_callback,
-    round = "line",
-    buffer_kb = 0.01
-  )
+  resp <- authenticate(req, error_call = error_call) |>
+    req_perform_stream(
+      callback = stream_callback, round = "line", buffer_kb = 0.01
+    )
 
   invisible(resp)
 }

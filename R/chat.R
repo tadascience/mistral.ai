@@ -10,9 +10,7 @@
 #'         if this is a `dry_run`
 #'
 #' @examples
-#' \dontrun{
-#'   chat("Top 5 R packages", dry_run = TRUE)
-#' }
+#' chat("Top 5 R packages", dry_run = TRUE)
 #'
 #' @export
 chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
@@ -22,7 +20,9 @@ chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_c
   if (is_true(dry_run)) {
     return(req)
   }
-  resp <- req_mistral_perform(req, error_call = error_call)
+  resp <- authenticate(req, error_call = error_call) |>
+    req_mistral_perform(error_call = error_call)
+
   class(resp) <- c("chat", class(resp))
   resp
 }
@@ -41,7 +41,6 @@ req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., erro
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate(error_call = error_call) |>
     req_body_json(
       list(
         model = model,
