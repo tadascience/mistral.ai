@@ -7,7 +7,7 @@ stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error
   check_dots_empty(call = error_call)
 
   messages <- as_messages(messages)
-  req <- req_chat(messages, model, stream = TRUE, error_call = error_call, dry_run = dry_run)
+  req <- req_chat(messages, model, stream = TRUE, error_call = error_call)
   if (is_true(dry_run)) {
     return(req)
   }
