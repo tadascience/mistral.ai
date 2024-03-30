@@ -4,29 +4,25 @@ req_mistral_perform <- function(req, error_call = caller_env()) {
     req_perform(req),
     error = function(err) {
       resp <- err$resp
-
-      switch(mistral_error(err, resp, req),
-        invalid_model = handle_invalid_model_error(err, req, resp, error_call = error_call),
-        unauthorized  = handle_unauthorized(err, req, resp, error_call = error_call),
-        other         = handle_other(err, error_call = error_call)
-      )
+      handler <- mistral_error_handler(err, resp, req)
+      handler(err, req, resp, error_call = error_call)
     }
   )
 }
 
-mistral_error <- function(err, resp, req) {
+mistral_error_handler <- function(err, resp, req) {
   status <- resp_status(resp)
 
   if (status == 401) {
-    "unauthorized"
+    handle_unauthorized
   } else if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
-    "invalid_model"
+    handle_invalid_model
   } else {
-    "other"
+    handle_other
   }
 }
 
-handle_invalid_model_error <- function(err, req, resp, error_call = caller_env()) {
+handle_invalid_model <- function(err, req, resp, error_call = caller_env()) {
   status <- resp_status(resp)
   if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
     model <- req$body$data$model
@@ -52,7 +48,7 @@ handle_unauthorized <- function(err, req, resp, error_call = caller_env()) {
   }
 }
 
-handle_other <- function(err, error_call = caller_env()) {
+handle_other <- function(err, req, resp, error_call = caller_env()) {
   url <- req$url
   cli_abort("Error with {.url {url}}.", call = error_call, parent = err)
 }
