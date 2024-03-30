@@ -10,7 +10,9 @@
 #'         if this is a `dry_run`
 #'
 #' @examples
-#' chat("Top 5 R packages", dry_run = TRUE)
+#' \dontrun{
+#'   chat("Top 5 R packages", dry_run = TRUE)
+#' }
 #'
 #' @export
 chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
@@ -39,7 +41,7 @@ req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., erro
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate() |>
+    authenticate(error_call = error_call) |>
     req_body_json(
       list(
         model = model,
@@ -61,7 +63,6 @@ as.data.frame.chat_response <- function(x, ...) {
   rbind(df_req, df_resp)
 }
 
-#' @importFrom tibble as_tibble
 #' @export
 as_tibble.chat_response <- function(x, ...) {
   tib <- as_tibble(as.data.frame(x, ...))

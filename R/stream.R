@@ -1,7 +1,6 @@
 #' stream
 #'
-#' @inheritParams chat
-#'
+#' @rdname chat
 #' @export
 stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
   check_dots_empty(call = error_call)
@@ -21,7 +20,6 @@ stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error
   invisible(resp)
 }
 
-#' @importFrom jsonlite fromJSON
 stream_callback <- function(x) {
   txt <- rawToChar(x)
 
