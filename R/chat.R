@@ -33,10 +33,7 @@ print.chat <- function(x, ...) {
 
 req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run = FALSE, ..., error_call = caller_env()) {
   check_dots_empty()
-
-  if (!is_true(dry_run)) {
-    check_model(model, error_call = error_call)
-  }
+  check_scalar_string(model, error_call = error_call)
 
   messages <- as_messages(messages)
 

@@ -24,9 +24,3 @@ models <- function(error_call = caller_env(), dry_run = FALSE) {
     resp_body_json(simplifyVector = TRUE) |>
     pluck("data","id")
 }
-
-check_model <- function(model, error_call = caller_env()) {
-  candidates <- models(error_call = error_call)
-  arg_match(model, values = candidates, error_call = error_call)
-  invisible(model)
-}

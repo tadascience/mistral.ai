@@ -4,7 +4,7 @@
 #'
 #' @export
 stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
-  check_model(model, error_call = error_call)
+  check_dots_empty(call = error_call)
 
   messages <- as_messages(messages)
   req <- req_chat(messages, model, stream = TRUE, error_call = error_call, dry_run = dry_run)
