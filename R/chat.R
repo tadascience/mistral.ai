@@ -1,10 +1,10 @@
 #' Chat with the Mistral api
 #'
 #' @param messages Messages
-#' @param text some text
 #' @param model which model to use. See [models()] for more information about which models are available
 #' @param dry_run if TRUE the request is not performed
-#' @inheritParams httr2::req_perform
+#' @inheritParams rlang::args_dots_empty
+#' @inheritParams rlang::args_error_context
 #'
 #' @return A tibble with columns `role` and `content` with class `chat_tibble` or a request
 #'         if this is a `dry_run`
@@ -13,7 +13,9 @@
 #' chat("Top 5 R packages", dry_run = TRUE)
 #'
 #' @export
-chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, error_call = current_env()) {
+chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
+  check_dots_empty()
+
   req <- req_chat(messages, model = model, error_call = error_call, dry_run = dry_run)
   if (is_true(dry_run)) {
     return(req)
@@ -29,7 +31,9 @@ print.chat <- function(x, ...) {
   invisible(x)
 }
 
-req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run = FALSE, error_call = caller_env()) {
+req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run = FALSE, ..., error_call = caller_env()) {
+  check_dots_empty()
+
   if (!is_true(dry_run)) {
     check_model(model, error_call = error_call)
   }
@@ -50,8 +54,12 @@ req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run =
 
 #' @export
 as.data.frame.chat_response <- function(x, ...) {
-  df_req <- map_dfr(resp$request$body$data$messages, as.data.frame)
-  df_resp <- as.data.frame(resp_body_json(resp)$choices[[1]]$message[c("role", "content")])
+  req_messages <- x$request$body$data$messages
+  df_req <- map_dfr(req_messages, as.data.frame)
+
+  df_resp <- as.data.frame(
+    resp_body_json(x)$choices[[1]]$message[c("role", "content")]
+  )
 
   rbind(df_req, df_resp)
 }

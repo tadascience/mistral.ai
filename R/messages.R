@@ -1,24 +1,37 @@
+#' Convert object into a messages list
+#'
+#' @param messages object to convert to messages
+#' @param ... ignored
+#' @inheritParams rlang::args_error_context
+#'
+#' @examples
+#' as_messages("hello")
+#' as_messages(list("hello"))
+#' as_messages(list(assistant = "hello", user = "hello"))
+#'
 #' @export
-as_messages <- function(messages, ...) {
+as_messages <- function(messages, ..., error_call = current_env()) {
   UseMethod("as_messages")
 }
 
 #' @export
-as_messages.character <- function(x, ..., error_call = current_env()) {
-  check_scalar_string(x, error_call = error_call)
-  check_unnamed_string(x, error_call = error_call)
+as_messages.character <- function(messages, ..., error_call = current_env()) {
+  check_dots_empty(call = error_call)
+  check_scalar_string(messages, error_call = error_call)
+  check_unnamed_string(messages, error_call = error_call)
 
   list(
-    list(role = "user", content = x)
+    list(role = "user", content = messages)
   )
 }
 
 #' @export
-as_messages.list <- function(x, ..., error_call = caller_env()) {
+as_messages.list <- function(messages, ..., error_call = caller_env()) {
   check_dots_empty()
 
-  bits <- map2(x, names2(x), as_msg, error_call = error_call)
-  out <- list_flatten(bits)
+  out <- list_flatten(
+    map2(messages, names2(messages), as_msg, error_call = error_call)
+  )
   names(out) <- NULL
   out
 }
