@@ -17,7 +17,7 @@ chat(
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 
-\item{dry_run}{if TRUE the request is not performed}
+\item{dry_run}{if TRUE the request is returned instead of performed}
 
 \item{...}{These dots are for future extensions and must be empty.}
 

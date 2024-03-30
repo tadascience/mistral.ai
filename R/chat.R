@@ -2,7 +2,7 @@
 #'
 #' @param messages Messages
 #' @param model which model to use. See [models()] for more information about which models are available
-#' @param dry_run if TRUE the request is not performed
+#' @param dry_run if TRUE the request is returned instead of performed
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams rlang::args_error_context
 #'
