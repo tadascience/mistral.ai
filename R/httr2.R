@@ -4,10 +4,26 @@ req_mistral_perform <- function(req, error_call = caller_env()) {
     req_perform(req),
     error = function(err) {
       resp <- err$resp
-      handle_invalid_model_error(err, req, resp, error_call = error_call)
-      handle_req_perform_error(err, req, resp, error_call = error_call)
+
+      switch(mistral_error(err, resp, req),
+        invalid_model = handle_invalid_model_error(err, req, resp, error_call = error_call),
+        unauthorized  = handle_unauthorized(err, req, resp, error_call = error_call),
+        other         = handle_other(err, error_call = error_call)
+      )
     }
   )
+}
+
+mistral_error <- function(err, resp, req) {
+  status <- resp_status(resp)
+
+  if (status == 401) {
+    "unauthorized"
+  } else if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
+    "invalid_model"
+  } else {
+    "other"
+  }
 }
 
 handle_invalid_model_error <- function(err, req, resp, error_call = caller_env()) {
@@ -21,21 +37,22 @@ handle_invalid_model_error <- function(err, req, resp, error_call = caller_env()
   }
 }
 
-handle_req_perform_error <- function(err, req, resp, error_call = caller_env()) {
+handle_unauthorized <- function(err, req, resp, error_call = caller_env()) {
+  status <- resp_status(resp)
   url <- req$url
-  bullets <- c(x = "with endpoint {.url {url}}")
 
-  if (!inherits(err, "error_mistral_req_perform")) {
+  if (status == 401) {
     bullets <- c(
-      bullets,
+      "Unauthorized {.url {url}}.",
       i = "Make sure your api key is valid {.url https://console.mistral.ai/api-keys/}",
       i = "And set the {.envvar MISTRAL_API_KEY} environment variable",
       i = "Perhaps using {.fn usethis::edit_r_environ}"
     )
+    cli_abort(bullets, call = error_call)
   }
+}
 
-  cli_abort(
-    bullets, class = c("error_mistral_req_perform"),
-    call = error_call, parent = err
-  )
+handle_other <- function(err, error_call = caller_env()) {
+  url <- req$url
+  cli_abort("Error with {.url {url}}.", call = error_call, parent = err)
 }
