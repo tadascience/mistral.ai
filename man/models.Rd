@@ -19,6 +19,9 @@ A character vector with the models available in the Mistral API
 Retrieve all models available in the Mistral API
 }
 \examples{
-models()
+\dontrun{
+  models()
+}
+
 
 }
