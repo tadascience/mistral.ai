@@ -5,7 +5,7 @@
 \title{Chat with the Mistral api}
 \usage{
 chat(
-  text = "What are the top 5 R packages ?",
+  messages,
   model = "mistral-tiny",
   dry_run = FALSE,
   ...,
@@ -13,13 +13,13 @@ chat(
 )
 }
 \arguments{
-\item{text}{some text}
+\item{messages}{Messages}
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 
 \item{dry_run}{if TRUE the request is not performed}
 
-\item{...}{ignored}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
