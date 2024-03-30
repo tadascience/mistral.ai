@@ -9,10 +9,13 @@
 #'         if this is a `dry_run`
 #'
 #' @examples
-#' chat("Top 5 R packages", dry_run = TRUE)
+#'
+#' \dontrun{
+#'   chat("Top 5 R packages")
+#' }
 #'
 #' @export
-chat <- function(messages, model = "mistral-tiny", .., error_call = current_env()) {
+chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
   check_dots_empty(call = error_call)
 
   req <- req_chat(messages, model = model, error_call = error_call)
@@ -37,7 +40,7 @@ req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., erro
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate(error_call = error_call)
+    authenticate(error_call = error_call) |>
     req_body_json(
       list(
         model = model,
