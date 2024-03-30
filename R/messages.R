@@ -27,7 +27,7 @@ as_messages.character <- function(messages, ..., error_call = current_env()) {
 
 #' @export
 as_messages.list <- function(messages, ..., error_call = caller_env()) {
-  check_dots_empty()
+  check_dots_empty(call = error_call)
 
   out <- list_flatten(
     map2(messages, names2(messages), as_msg, error_call = error_call)

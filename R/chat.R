@@ -14,7 +14,7 @@
 #'
 #' @export
 chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
-  check_dots_empty()
+  check_dots_empty(call = error_call)
 
   req <- req_chat(messages, model = model, error_call = error_call)
   if (is_true(dry_run)) {
@@ -32,7 +32,7 @@ print.chat <- function(x, ...) {
 }
 
 req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., error_call = caller_env()) {
-  check_dots_empty()
+  check_dots_empty(call = error_call)
   check_scalar_string(model, error_call = error_call)
 
   messages <- as_messages(messages)
