@@ -1,27 +1,18 @@
 #' stream
 #'
-#' @inheritParams chat
-#'
+#' @rdname chat
 #' @export
-stream <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
-  check_model(model, error_call = error_call)
+stream <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
+  check_dots_empty(call = error_call)
 
   messages <- as_messages(messages)
-  req <- req_chat(messages, model, stream = TRUE, error_call = error_call, dry_run = dry_run)
-  if (is_true(dry_run)) {
-    return(req)
-  }
+  req <- req_chat(messages, model, stream = TRUE, error_call = error_call)
 
-  resp <- req_perform_stream(req,
-    callback = stream_callback,
-    round = "line",
-    buffer_kb = 0.01
-  )
+  resp <- req_perform_stream(req, callback = stream_callback, round = "line", buffer_kb = 0.01)
 
   invisible(resp)
 }
 
-#' @importFrom jsonlite fromJSON
 stream_callback <- function(x) {
   txt <- rawToChar(x)
 

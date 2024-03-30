@@ -1,26 +1,54 @@
 req_mistral_perform <- function(req, error_call = caller_env()) {
 
-  url <- req$url
-  handle_req_perform_error <- function(err) {
-    bullets <- c(x = "with endpoint {.url {url}}")
-
-    if (!inherits(err, "error_mistral_req_perform")) {
-      bullets <- c(
-        bullets,
-        i = "Make sure your api key is valid {.url https://console.mistral.ai/api-keys/}",
-        i = "And set the {.envvar MISTRAL_API_KEY} environment variable",
-        i = "Perhaps using {.fn usethis::edit_r_environ}"
-      )
-    }
-
-    cli_abort(
-      bullets, class = c("error_mistral_req_perform"),
-      call = error_call, parent = err
-    )
-  }
-
   withCallingHandlers(
     req_perform(req),
-    error = handle_req_perform_error
+    error = function(err) {
+      resp <- err$resp
+      handler <- mistral_error_handler(err, resp, req)
+      handler(err, req, resp, error_call = error_call)
+    }
   )
+}
+
+mistral_error_handler <- function(err, resp, req) {
+  status <- resp_status(resp)
+
+  if (status == 401) {
+    handle_unauthorized
+  } else if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
+    handle_invalid_model
+  } else {
+    handle_other
+  }
+}
+
+handle_invalid_model <- function(err, req, resp, error_call = caller_env()) {
+  status <- resp_status(resp)
+  if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
+    model <- req$body$data$model
+    cli_abort(c(
+      "Invalid mistrai.ai model {.emph {model}}.",
+      i = "Use one of {.or {models()}}."
+    ), call = error_call)
+  }
+}
+
+handle_unauthorized <- function(err, req, resp, error_call = caller_env()) {
+  status <- resp_status(resp)
+  url <- req$url
+
+  if (status == 401) {
+    bullets <- c(
+      "Unauthorized {.url {url}}.",
+      i = "Make sure your api key is valid {.url https://console.mistral.ai/api-keys/}",
+      i = "And set the {.envvar MISTRAL_API_KEY} environment variable",
+      i = "Perhaps using {.fn usethis::edit_r_environ}"
+    )
+    cli_abort(bullets, call = error_call)
+  }
+}
+
+handle_other <- function(err, req, resp, error_call = caller_env()) {
+  url <- req$url
+  cli_abort("Error with {.url {url}}.", call = error_call, parent = err)
 }

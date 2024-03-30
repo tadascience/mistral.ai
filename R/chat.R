@@ -2,7 +2,6 @@
 #'
 #' @param messages Messages
 #' @param model which model to use. See [models()] for more information about which models are available
-#' @param dry_run if TRUE the request is not performed
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams rlang::args_error_context
 #'
@@ -10,17 +9,19 @@
 #'         if this is a `dry_run`
 #'
 #' @examples
-#' chat("Top 5 R packages", dry_run = TRUE)
+#'
+#' \dontrun{
+#'   chat("Top 5 R packages")
+#' }
 #'
 #' @export
-chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, ..., error_call = current_env()) {
-  check_dots_empty()
+chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
+  check_dots_empty(call = error_call)
 
-  req <- req_chat(messages, model = model, error_call = error_call, dry_run = dry_run)
-  if (is_true(dry_run)) {
-    return(req)
-  }
-  resp <- req_mistral_perform(req, error_call = error_call)
+  req <- req_chat(messages, model = model, error_call = error_call)
+  resp <- authenticate(req, error_call = error_call) |>
+    req_mistral_perform(error_call = error_call)
+
   class(resp) <- c("chat", class(resp))
   resp
 }
@@ -31,18 +32,15 @@ print.chat <- function(x, ...) {
   invisible(x)
 }
 
-req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run = FALSE, ..., error_call = caller_env()) {
-  check_dots_empty()
-
-  if (!is_true(dry_run)) {
-    check_model(model, error_call = error_call)
-  }
+req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., error_call = caller_env()) {
+  check_dots_empty(call = error_call)
+  check_scalar_string(model, error_call = error_call)
 
   messages <- as_messages(messages)
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
-    authenticate() |>
+    authenticate(error_call = error_call) |>
     req_body_json(
       list(
         model = model,
@@ -64,7 +62,6 @@ as.data.frame.chat_response <- function(x, ...) {
   rbind(df_req, df_resp)
 }
 
-#' @importFrom tibble as_tibble
 #' @export
 as_tibble.chat_response <- function(x, ...) {
   tib <- as_tibble(as.data.frame(x, ...))

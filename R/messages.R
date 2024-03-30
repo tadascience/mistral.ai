@@ -27,7 +27,7 @@ as_messages.character <- function(messages, ..., error_call = current_env()) {
 
 #' @export
 as_messages.list <- function(messages, ..., error_call = caller_env()) {
-  check_dots_empty()
+  check_dots_empty(call = error_call)
 
   out <- list_flatten(
     map2(messages, names2(messages), as_msg, error_call = error_call)
@@ -57,9 +57,12 @@ check_role <- function(name = "", error_call = caller_env()) {
   name
 }
 
-check_scalar_string <- function(x, error_call = caller_env()) {
+check_scalar_string <- function(x, error_call = caller_env(), arg_name = deparse(substitute(x))) {
+  if (!is.character(x)) {
+    cli_abort("{.arg {arg_name}} must be a single string, not {.obj_type_friendly {x}}. ", call = error_call)
+  }
   if (length(x) != 1L) {
-    cli_abort("{.arg x} must be a single string, not length {.code {length(x)}}. ", call = error_call)
+    cli_abort("{.arg {arg_name}} must be a single string, not length {.code {length(x)}}. ", call = error_call)
   }
 }
 
