@@ -4,10 +4,15 @@
 \alias{chat}
 \title{Chat with the Mistral api}
 \usage{
-chat(..., model = "mistral-tiny", dry_run = FALSE, error_call = current_env())
+chat(
+  messages,
+  model = "mistral-tiny",
+  dry_run = FALSE,
+  error_call = current_env()
+)
 }
 \arguments{
-\item{...}{messages}
+\item{messages}{Messages}
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 

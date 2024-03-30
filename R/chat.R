@@ -1,6 +1,6 @@
 #' Chat with the Mistral api
 #'
-#' @param ... messages
+#' @param messages Messages
 #' @param text some text
 #' @param model which model to use. See [models()] for more information about which models are available
 #' @param dry_run if TRUE the request is not performed
@@ -13,8 +13,8 @@
 #' chat("Top 5 R packages", dry_run = TRUE)
 #'
 #' @export
-chat <- function(..., model = "mistral-tiny", dry_run = FALSE, error_call = current_env()) {
-  req <- req_chat(..., model = model, error_call = error_call, dry_run = dry_run)
+chat <- function(messages, model = "mistral-tiny", dry_run = FALSE, error_call = current_env()) {
+  req <- req_chat(messages, model = model, error_call = error_call, dry_run = dry_run)
   if (is_true(dry_run)) {
     return(req)
   }
@@ -25,16 +25,16 @@ chat <- function(..., model = "mistral-tiny", dry_run = FALSE, error_call = curr
 
 #' @export
 print.chat <- function(x, ...) {
-  writeLines(resp_body_json(resp)$choices[[1]]$message$content)
+  writeLines(resp_body_json(x)$choices[[1]]$message$content)
   invisible(x)
 }
 
-req_chat <- function(..., model = "mistral-tiny", stream = FALSE, dry_run = FALSE, error_call = caller_env()) {
+req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, dry_run = FALSE, error_call = caller_env()) {
   if (!is_true(dry_run)) {
     check_model(model, error_call = error_call)
   }
 
-  messages <- as_messages(...)
+  messages <- as_messages(messages)
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>
