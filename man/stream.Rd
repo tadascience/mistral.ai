@@ -5,7 +5,7 @@
 \title{stream}
 \usage{
 stream(
-  text,
+  messages,
   model = "mistral-tiny",
   dry_run = FALSE,
   ...,
@@ -13,7 +13,7 @@ stream(
 )
 }
 \arguments{
-\item{text}{some text}
+\item{messages}{Messages}
 
 \item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
 
