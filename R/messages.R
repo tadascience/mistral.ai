@@ -1,7 +1,7 @@
 #' Convert object into a messages list
 #'
 #' @param messages object to convert to messages
-#' @param ... ignored
+#' @inheritParams rlang::args_dots_empty
 #' @inheritParams rlang::args_error_context
 #'
 #' @examples

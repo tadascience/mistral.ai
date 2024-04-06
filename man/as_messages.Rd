@@ -9,7 +9,7 @@ as_messages(messages, ..., error_call = current_env())
 \arguments{
 \item{messages}{object to convert to messages}
 
-\item{...}{ignored}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
