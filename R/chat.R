@@ -18,9 +18,22 @@
 chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
   check_dots_empty(call = error_call)
 
+  messages <- as_messages(messages) %!% "Can't convert {.arg messages} to a list of messages."
+
   req <- req_chat(messages, model = model, error_call = error_call)
   resp <- authenticate(req, error_call = error_call) |>
     req_mistral_perform(error_call = error_call)
+
+
+  req_messages <- x$request$body$data$messages
+  df_req <- map_dfr(req_messages, as.data.frame)
+
+  df_resp <- as.data.frame(
+    resp_body_json(x)$choices[[1]]$message[c("role", "content")]
+  )
+
+  rbind(df_req, df_resp)
+
 
   class(resp) <- c("chat", class(resp))
   resp
@@ -35,8 +48,6 @@ print.chat <- function(x, ...) {
 req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., error_call = caller_env()) {
   check_dots_empty(call = error_call)
   check_scalar_string(model, error_call = error_call)
-
-  messages <- as_messages(messages)
 
   request(mistral_base_url) |>
     req_url_path_append("v1", "chat", "completions") |>

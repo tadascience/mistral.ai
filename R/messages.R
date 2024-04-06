@@ -1,7 +1,7 @@
 #' Convert object into a messages list
 #'
 #' @param messages object to convert to messages
-#' @param ... ignored
+#' @inheritParams rlang::args_dots_empty
 #' @inheritParams rlang::args_error_context
 #'
 #' @examples
@@ -10,8 +10,16 @@
 #' as_messages(list(assistant = "hello", user = "hello"))
 #'
 #' @export
-as_messages <- function(messages, ..., error_call = current_env()) {
+as_messages <- function(messages, ...) {
   UseMethod("as_messages")
+}
+
+#' @export
+as_messages.default <- function(messages, ..., error_call = current_env()) {
+  cli_abort(c(
+    "No known method for objects of class {.cls {class(messages)}}.",
+    i = "Use as_messages(<character>) or as_messages(<list>)."
+  ), call = error_call)
 }
 
 #' @export
@@ -57,12 +65,12 @@ check_role <- function(name = "", error_call = caller_env()) {
   name
 }
 
-check_scalar_string <- function(x, error_call = caller_env(), arg_name = deparse(substitute(x))) {
+check_scalar_string <- function(x, error_call = caller_env(), error_arg = caller_arg(x)) {
   if (!is.character(x)) {
-    cli_abort("{.arg {arg_name}} must be a single string, not {.obj_type_friendly {x}}. ", call = error_call)
+    cli_abort("{.arg {error_arg}} must be a single string, not {.obj_type_friendly {x}}. ", call = error_call)
   }
   if (length(x) != 1L) {
-    cli_abort("{.arg {arg_name}} must be a single string, not length {.code {length(x)}}. ", call = error_call)
+    cli_abort("{.arg {error_arg}} must be a single string, not length {.code {length(x)}}. ", call = error_call)
   }
 }
 

@@ -20,5 +20,8 @@ Imports:
     tibble,
     stringr,
     jsonlite,
-    rlang
-Remotes: r-lib/httr2
+    rlang,
+    slap
+Remotes: 
+    r-lib/httr2, 
+    tadascience/slap
