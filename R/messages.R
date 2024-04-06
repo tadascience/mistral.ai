@@ -57,12 +57,12 @@ check_role <- function(name = "", error_call = caller_env()) {
   name
 }
 
-check_scalar_string <- function(x, error_call = caller_env(), arg_name = deparse(substitute(x))) {
+check_scalar_string <- function(x, error_call = caller_env(), error_arg = caller_arg(x)) {
   if (!is.character(x)) {
-    cli_abort("{.arg {arg_name}} must be a single string, not {.obj_type_friendly {x}}. ", call = error_call)
+    cli_abort("{.arg {error_arg}} must be a single string, not {.obj_type_friendly {x}}. ", call = error_call)
   }
   if (length(x) != 1L) {
-    cli_abort("{.arg {arg_name}} must be a single string, not length {.code {length(x)}}. ", call = error_call)
+    cli_abort("{.arg {error_arg}} must be a single string, not length {.code {length(x)}}. ", call = error_call)
   }
 }
 
