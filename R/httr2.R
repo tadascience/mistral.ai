@@ -1,25 +1,19 @@
 req_mistral_perform <- function(req, error_call = caller_env()) {
-
-  withCallingHandlers(
-    req_perform(req),
-    error = function(err) {
-      resp <- err$resp
-      handler <- mistral_error_handler(err, resp, req)
-      handler(err, req, resp, error_call = error_call)
-    }
-  )
+  req_perform(req) %!% \(err) handle_mistral_error(err, req, error_call)
 }
 
-mistral_error_handler <- function(err, resp, req) {
+handle_mistral_error <- function(err, req, error_call) {
+  resp <- err$resp
   status <- resp_status(resp)
 
-  if (status == 401) {
+  handler <- if (status == 401) {
     handle_unauthorized
   } else if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
     handle_invalid_model
   } else {
     handle_other
   }
+  handler(err, req, resp, error_call = error_call)
 }
 
 handle_invalid_model <- function(err, req, resp, error_call = caller_env()) {
