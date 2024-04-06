@@ -4,17 +4,12 @@
 \alias{as_messages}
 \title{Convert object into a messages list}
 \usage{
-as_messages(messages, ..., error_call = current_env())
+as_messages(messages, ...)
 }
 \arguments{
 \item{messages}{object to convert to messages}
 
 \item{...}{These dots are for future extensions and must be empty.}
-
-\item{error_call}{The execution environment of a currently
-running function, e.g. \code{caller_env()}. The function will be
-mentioned in error messages as the source of the error. See the
-\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 Convert object into a messages list

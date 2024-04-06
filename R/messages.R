@@ -10,8 +10,16 @@
 #' as_messages(list(assistant = "hello", user = "hello"))
 #'
 #' @export
-as_messages <- function(messages, ..., error_call = current_env()) {
+as_messages <- function(messages, ...) {
   UseMethod("as_messages")
+}
+
+#' @export
+as_messages.default <- function(messages, ..., error_call = current_env()) {
+  cli_abort(c(
+    "No known method for objects of class {.cls {class(messages)}}.",
+    i = "Use as_messages(<character>) or as_messages(<list>)."
+  ), call = error_call)
 }
 
 #' @export
