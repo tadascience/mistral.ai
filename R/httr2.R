@@ -14,9 +14,10 @@ req_mistral_perform <- function(req, error_call = caller_env()) {
         i = "Perhaps using {.fn usethis::edit_r_environ}"
       )
     } else if (status == 400 && resp_body_json(resp)$type == "invalid_model") {
+      model <- req$body$data$model
       c(
-        "Invalid mistrai.ai model {.emph {model}}.",
-        i = "Use one of {.or {models()}}."
+        "Invalid mistrai.ai model {.val {model}}.",
+        i = "Available models: {.val {models()}}."
       )
     } else {
       "Error with {.url {url}}."
