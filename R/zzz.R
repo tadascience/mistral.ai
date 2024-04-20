@@ -4,7 +4,7 @@
 #' @import tibble
 #' @import stringr
 #' @import slap
-#' @importFrom purrr list_rbind map map_chr pluck map2 list_flatten
+#' @importFrom purrr list_rbind map map_chr pluck map2 list_flatten walk
 #' @importFrom jsonlite fromJSON
 #' @importFrom utils tail
 NULL
