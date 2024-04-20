@@ -22,8 +22,7 @@ chat <- function(..., model = "mistral-tiny", error_call = current_env()) {
   messages <- as_messages(..., error_call = error_call)
 
   req <- req_chat(messages, model = model, error_call = error_call)
-  resp <- authenticate(req, error_call = error_call) |>
-    req_mistral_perform(error_call = error_call)
+  resp <- req_mistral_perform(error_call = error_call)
 
   data <- resp_body_json(resp)
 
