@@ -1,36 +1,46 @@
 #' Chat with the Mistral api
 #'
-#' @param messages Messages
-#' @param model which model to use. See [models()] for more information about which models are available
-#' @inheritParams rlang::args_dots_empty
+#' @param ... messages, see [as_messages()].
+#' @param model which model to use. See [models()] for more information about which models are available.
 #' @inheritParams rlang::args_error_context
 #'
-#' @return A tibble with columns `role` and `content` with class `chat_tibble` or a request
-#'         if this is a `dry_run`
+#' @return A tibble with columns `role` and `content` with class `chat_tibble`
 #'
 #' @examples
 #'
 #' \dontrun{
-#'   chat("Top 5 R packages")
+#'   res <- chat("What are the top 5 R packages ?")
+#'   res
+#'
+#'   # use the result from a previous chat() to continue the
+#'   # conversation
+#'   chat(res, "Why do people love them so much ?")
 #' }
 #'
 #' @export
-chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
-  check_dots_empty(call = error_call)
-
-  messages <- as_messages(messages) %!% "Can't convert {.arg messages} to a list of messages."
+chat <- function(..., model = "mistral-tiny", error_call = current_env()) {
+  messages <- as_messages(..., error_call = error_call)
 
   req <- req_chat(messages, model = model, error_call = error_call)
   resp <- authenticate(req, error_call = error_call) |>
     req_mistral_perform(error_call = error_call)
 
-  class(resp) <- c("chat", class(resp))
-  resp
+  data <- resp_body_json(resp)
+
+  tbl_req  <- list_rbind(map(messages, as_tibble))
+  tbl_resp <- list_rbind(map(data$choices, \(choice) {
+    as_tibble(choice$message[c("role", "content")])
+  }))
+  tbl <- list_rbind(list(tbl_req, tbl_resp))
+
+  class(tbl) <- c("chat_tibble", class(tbl))
+  attr(tbl, "resp") <- resp
+  tbl
 }
 
 #' @export
-print.chat <- function(x, ...) {
-  writeLines(resp_body_json(x)$choices[[1]]$message$content)
+print.chat_tibble <- function(x, ...) {
+  writeLines(tail(x$content, 1L))
   invisible(x)
 }
 
@@ -48,34 +58,4 @@ req_chat <- function(messages, model = "mistral-tiny", stream = FALSE, ..., erro
         stream = is_true(stream)
       )
     )
-}
-
-#' @export
-as.data.frame.chat_response <- function(x, ...) {
-  req_messages <- x$request$body$data$messages
-  df_req <- map_dfr(req_messages, as.data.frame)
-
-  df_resp <- as.data.frame(
-    resp_body_json(x)$choices[[1]]$message[c("role", "content")]
-  )
-
-  rbind(df_req, df_resp)
-}
-
-#' @export
-as_tibble.chat_response <- function(x, ...) {
-  tib <- as_tibble(as.data.frame(x, ...))
-  class(tib) <- c("chat_tbl", class(x))
-  tib
-}
-
-#' @export
-print.chat_tbl <- function(x, ...) {
-  n <- nrow(x)
-
-  for (i in seq_len(n)) {
-    writeLines(cli::col_silver(cli::rule(x$role[i])))
-    writeLines(x$content[i])
-  }
-  invisible(x)
 }

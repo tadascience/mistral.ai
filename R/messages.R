@@ -1,42 +1,25 @@
 #' Convert object into a messages list
 #'
-#' @param messages object to convert to messages
-#' @inheritParams rlang::args_dots_empty
+#' @param ... objects to convert to messages. Each element can be:
+#'            a string or a result from [chat()].
 #' @inheritParams rlang::args_error_context
 #'
 #' @examples
+#' # unnamed string means user
 #' as_messages("hello")
-#' as_messages(list("hello"))
-#' as_messages(list(assistant = "hello", user = "hello"))
 #'
+#' # explicit names
+#' as_messages(assistant = "hello", user = "hello")
+#'
+#' \dontrun{
+#'   res <- chat("hello")
+#'
+#'   # add result from previous chat()
+#'   as_messages(res, "hello")
+#' }
 #' @export
-as_messages <- function(messages, ...) {
-  UseMethod("as_messages")
-}
-
-#' @export
-as_messages.default <- function(messages, ..., error_call = current_env()) {
-  cli_abort(c(
-    "No known method for objects of class {.cls {class(messages)}}.",
-    i = "Use as_messages(<character>) or as_messages(<list>)."
-  ), call = error_call)
-}
-
-#' @export
-as_messages.character <- function(messages, ..., error_call = current_env()) {
-  check_dots_empty(call = error_call)
-  check_scalar_string(messages, error_call = error_call)
-  check_unnamed_string(messages, error_call = error_call)
-
-  list(
-    list(role = "user", content = messages)
-  )
-}
-
-#' @export
-as_messages.list <- function(messages, ..., error_call = caller_env()) {
-  check_dots_empty(call = error_call)
-
+as_messages <- function(..., error_call = current_env()) {
+  messages <- list2(...)
   out <- list_flatten(
     map2(messages, names2(messages), as_msg, error_call = error_call)
   )
@@ -56,6 +39,16 @@ as_msg.character <- function(x, name, error_call = caller_env()) {
   list(
     list(role = role, content = x)
   )
+}
+
+#' @export
+as_msg.chat_tibble <- function(x, name, error_call = caller_env()) {
+  map(seq_len(nrow(x)), \(i) {
+    list(
+      role    = x$role[i],
+      content = x$content[i]
+    )
+  })
 }
 
 check_role <- function(name = "", error_call = caller_env()) {

@@ -2,12 +2,9 @@
 #'
 #' @rdname chat
 #' @export
-stream <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
-  check_dots_empty(call = error_call)
-
-  messages <- as_messages(messages)
+stream <- function(..., model = "mistral-tiny", error_call = current_env()) {
+  messages <- as_messages(..., error_call = error_call)
   req <- req_chat(messages, model, stream = TRUE, error_call = error_call)
-
   resp <- req_perform_stream(req, callback = stream_callback, round = "line", buffer_kb = 0.01)
 
   invisible(resp)

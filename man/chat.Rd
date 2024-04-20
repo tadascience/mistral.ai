@@ -5,16 +5,14 @@
 \alias{stream}
 \title{Chat with the Mistral api}
 \usage{
-chat(messages, model = "mistral-tiny", ..., error_call = current_env())
+chat(..., model = "mistral-tiny", error_call = current_env())
 
-stream(messages, model = "mistral-tiny", ..., error_call = current_env())
+stream(..., model = "mistral-tiny", error_call = current_env())
 }
 \arguments{
-\item{messages}{Messages}
+\item{...}{messages, see \code{\link[=as_messages]{as_messages()}}.}
 
-\item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available}
-
-\item{...}{These dots are for future extensions and must be empty.}
+\item{model}{which model to use. See \code{\link[=models]{models()}} for more information about which models are available.}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
@@ -22,8 +20,7 @@ mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
-A tibble with columns \code{role} and \code{content} with class \code{chat_tibble} or a request
-if this is a \code{dry_run}
+A tibble with columns \code{role} and \code{content} with class \code{chat_tibble}
 }
 \description{
 Chat with the Mistral api
@@ -33,7 +30,12 @@ stream
 \examples{
 
 \dontrun{
-  chat("Top 5 R packages")
+  res <- chat("What are the top 5 R packages ?")
+  res
+
+  # use the result from a previous chat() to continue the
+  # conversation
+  chat(res, "Why do people love them so much ?")
 }
 
 }
