@@ -1,6 +1,7 @@
 req_mistral_perform <- function(req, error_call = caller_env()) {
 
   handle_mistral_error <- function(err) {
+    req <- err$req
     resp <- err$resp
     url <- req$url
     status <- resp_status(resp)
@@ -26,4 +27,3 @@ req_mistral_perform <- function(req, error_call = caller_env()) {
 
   req_perform(req) %!% handle_mistral_error
 }
-
