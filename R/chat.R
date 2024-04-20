@@ -24,17 +24,6 @@ chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env
   resp <- authenticate(req, error_call = error_call) |>
     req_mistral_perform(error_call = error_call)
 
-
-  req_messages <- x$request$body$data$messages
-  df_req <- map_dfr(req_messages, as.data.frame)
-
-  df_resp <- as.data.frame(
-    resp_body_json(x)$choices[[1]]$message[c("role", "content")]
-  )
-
-  rbind(df_req, df_resp)
-
-
   class(resp) <- c("chat", class(resp))
   resp
 }
