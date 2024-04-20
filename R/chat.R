@@ -1,24 +1,25 @@
 #' Chat with the Mistral api
 #'
-#' @param messages Messages
-#' @param model which model to use. See [models()] for more information about which models are available
-#' @inheritParams rlang::args_dots_empty
+#' @param ... messages, see [as_messages()].
+#' @param model which model to use. See [models()] for more information about which models are available.
 #' @inheritParams rlang::args_error_context
 #'
-#' @return A tibble with columns `role` and `content` with class `chat_tibble` or a request
-#'         if this is a `dry_run`
+#' @return A tibble with columns `role` and `content` with class `chat_tibble`
 #'
 #' @examples
 #'
 #' \dontrun{
-#'   chat("Top 5 R packages")
+#'   res <- chat("What are the top 5 R packages ?")
+#'   res
+#'
+#'   # use the result from a previous chat() to continue the
+#'   # conversation
+#'   chat(res, "Why do people love them so much ?")
 #' }
 #'
 #' @export
-chat <- function(messages, model = "mistral-tiny", ..., error_call = current_env()) {
-  check_dots_empty(call = error_call)
-
-  messages <- as_messages(messages) %!% "Can't convert {.arg messages} to a list of messages."
+chat <- function(..., model = "mistral-tiny", error_call = current_env()) {
+  messages <- as_messages(..., error_call = error_call)
 
   req <- req_chat(messages, model = model, error_call = error_call)
   resp <- authenticate(req, error_call = error_call) |>

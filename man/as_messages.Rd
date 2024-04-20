@@ -4,19 +4,31 @@
 \alias{as_messages}
 \title{Convert object into a messages list}
 \usage{
-as_messages(messages, ...)
+as_messages(..., error_call = current_env())
 }
 \arguments{
-\item{messages}{object to convert to messages}
+\item{...}{objects to convert to messages. Each element can be:
+a string or a result from \code{\link[=chat]{chat()}}.}
 
-\item{...}{These dots are for future extensions and must be empty.}
+\item{error_call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 Convert object into a messages list
 }
 \examples{
+# unnamed string means user
 as_messages("hello")
-as_messages(list("hello"))
-as_messages(list(assistant = "hello", user = "hello"))
 
+# explicit names
+as_messages(assistant = "hello", user = "hello")
+
+\dontrun{
+  res <- chat("hello")
+
+  # add result from previous chat()
+  as_messages(res, "hello")
+}
 }
