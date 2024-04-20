@@ -58,6 +58,16 @@ as_msg.character <- function(x, name, error_call = caller_env()) {
   )
 }
 
+#' @export
+as_msg.chat_tibble <- function(x, name, error_call = caller_env()) {
+  map(seq_len(nrow(x)), \(i) {
+    list(
+      role    = x$role[i],
+      content = x$content[i]
+    )
+  })
+}
+
 check_role <- function(name = "", error_call = caller_env()) {
   if (identical(name, "")) {
     name <- "user"
